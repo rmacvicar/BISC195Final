@@ -26,6 +26,15 @@ function normalizeDNA(seq)
     return seq # change to `return LongDNASeq(seq)` if you want to try to use BioSequences types
 end
 
+"""
+    composition((::AbstractString)
+
+Creates a dictionary of nucleotide bases (including N)
+Uses dictionary to count number of each base in a 
+sequence.
+Returns dictionary with updated counts for each base
+"""
+
 function composition(sequence)
     sequence = normalizeDNA(sequence) 
     base_comp = Dict()
@@ -41,12 +50,30 @@ function composition(sequence)
     return base_comp
 end
 
+"""
+    gc_content(::AbstractString)
+
+Uses the composition function to obtain counts for 
+each base (including N) in a sequence.
+Returns the GC content by adding counts for G and C and
+dividing by the number of bases in the sequence
+"""
+
 function gc_content(seq)
     # obtain number of each base in the sequence
     baseComp = composition(seq)
     #calculate GC content
     return (baseComp['G'] + baseComp['C'])/length(seq)
 end 
+
+"""
+    complement(::AbstractString)
+
+Creates a dictionary where each base is a key with its value 
+assigned to the complement base. The complement bases
+are compiled to form the sequence complement.
+Returns sequence complement
+"""
     
 function complement(sequence)
     #make a dictionary for complement of each base
@@ -65,10 +92,23 @@ function complement(sequence)
     return seq_complement
  end
 
+ """
+    reverse_complement(::AbstractString)
+
+Returns the complement of the sequence in reverse 
+ """
+
 function reverse_complement(sequence)
     return reverse(complement(sequence))
 end
 
+"""
+    parse_fasta(path)
+
+Given the path to a file, it separates the contents 
+into strings of headers and sequences.
+Returns an Array for headers and for sequences
+"""
 function parse_fasta(path)
     headers = [] #holds tuples of parsed headers
     sequences = [] #holds one long concatendated string/sequence
@@ -84,24 +124,13 @@ function parse_fasta(path)
                     push!(headers, line[2:end]) #add new header line to headers
                 end
             else
+                normalizeDNA(line) #check if only valid bases are present
                 push!(seq_holder, line) 
             end
         end
         seq_holder = join(seq_holder)
-        push!(sequences, seq_holder) 
-        #check if only valid bases are present
-        for sequence in sequences
-            for base in sequence
-                @show base
-                if !occursin(base, "ATGCN")
-                    error("invalid base $base")
-                else
-                    return (headers, sequences)
-                end
-            end
-        end
+        push!(sequences, seq_holder)
+        return (headers, sequences)  
     end
-
-
-
+        
 end # module Assignment07
