@@ -39,7 +39,7 @@ function composition(sequence)
     sequence = normalizeDNA(sequence) 
     base_comp = Dict()
     #initialize base keys to 0
-    for base in "ATCGN"
+    for base in "ATCGNS" #S corresponds to G or C base
         base_comp[base] = 0
     end
     #add 1 to value of base key if encountered
@@ -63,7 +63,7 @@ function gc_content(seq)
     # obtain number of each base in the sequence
     baseComp = composition(seq)
     #calculate GC content
-    return (baseComp['G'] + baseComp['C'])/length(seq)
+    return (baseComp['G'] + baseComp['C'] + baseComp['S'])/length(seq)
 end 
 
 """
