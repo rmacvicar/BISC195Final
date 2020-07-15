@@ -124,7 +124,7 @@ function parse_fasta(path)
                     push!(headers, line[2:end]) #add new header line to headers
                 end
             else
-                normalizeDNA(line) #check if only valid bases are present
+                #normalizeDNA(line) #check if only valid bases are present: update- removed temporarily
                 push!(seq_holder, line) 
             end
         end

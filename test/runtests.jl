@@ -1,7 +1,7 @@
-using Assignment07
+using SequenceSummary
 using Test
 
-@testset "Assignment07" begin
+@testset "SequenceSummary" begin
 @testset "Using Strings" begin
     
     @testset "normalizeDNA" begin
@@ -140,4 +140,4 @@ end # strings
 
 # end # BioSequences
 
-end # Assignment07
+end # SequenceSummary
