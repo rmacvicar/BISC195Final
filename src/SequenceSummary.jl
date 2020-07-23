@@ -36,7 +36,7 @@ Returns dictionary with updated counts for each base
 """
 
 function composition(sequence)
-    sequence = normalizeDNA(sequence) 
+    #sequence = normalizeDNA(sequence) 
     base_comp = Dict()
     #initialize base keys to 0
     for base in "ATCGNS" #S corresponds to G or C base
@@ -44,7 +44,9 @@ function composition(sequence)
     end
     #add 1 to value of base key if encountered
     for base in sequence
-        base_comp[base] += 1     
+        if haskey(base_comp, base)
+            base_comp[base] += 1
+        end    
     end
     
     return base_comp
