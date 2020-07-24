@@ -5,7 +5,8 @@ export normalizeDNA,
        gc_content,
        complement,
        reverse_complement,
-       parse_fasta
+       parse_fasta,
+       kmer_match
 
 # # uncomment the following line if you intend to use BioSequences types
 # using BioSequences
@@ -134,5 +135,45 @@ function parse_fasta(path)
         push!(sequences, seq_holder)
         return (headers, sequences)  
     end
-        
+"""
+    kmer_match(::AbstractString, ::Int64)
+
+Using a sequence and provided kmer length, creates a dictionary with
+each unique kmer as a key. Returns an array of all of the kmer keys
+"""
+function kmer_match(seq, k)
+    1 <= k <= length(seq) || error("k must be a positive integer less than the length of the sequence")
+    kmers = Dict() # initialize dictionary 
+    stopindex = (length(seq)) - (k-1) 
+    for i in 1:stopindex
+        kmer = seq[i:i+(k-1)] # change to index the seq from i to i+k-1
+        bases_present = composition(kmer) #find which bases are present in kmer
+        #check if kmer consists of only AGCT
+        if (bases_present['A'] + bases_present['T'] + bases_present['C'] + bases_present['G'])/length(kmer) == 1
+            kmers[kmer] = 1 # create a key for it with a value of 1
+        end
+    end
+    #store and return all of the kmer keys
+    all_kmers = [] 
+    for (key, value) in kmers
+        push!(all_kmers, key)
+    end
+    return all_kmers
+end
+
+"""
+    kmer_dist(StringArray, StringArray)
+
+Compares the kmers found in both sequences with the total 
+number of kmers in each to determine and return distance metric. 
+Distance metric is a value between 0 and 1 where identical 
+sequences have a distance metric of 0.
+"""
+function kmer_dist(set1, set2)
+    shared_kmers = intersect(set1, set2)
+    kmer_tot = union(set1, set2)
+    set_dist = 1 - (length(shared_kmers)/length(kmer_tot))
+    return set_dist
+end
+
 end # module SequenceSummary
