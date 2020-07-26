@@ -6,7 +6,9 @@ export normalizeDNA,
        complement,
        reverse_complement,
        parse_fasta,
-       kmer_match
+       kmer_match,
+       kmer_dist
+    
 
 # # uncomment the following line if you intend to use BioSequences types
 # using BioSequences
